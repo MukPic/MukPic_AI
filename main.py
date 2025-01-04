@@ -25,11 +25,11 @@ async def predict(data: ImageURL):
     input_image_path = f"{output_dir}/{image_name}.jpg"
     label_file = os.path.join(labels_dir, f"{image_name}.txt")
 
-    # 디렉토리 생성 (존재하지 않을 경우)
+    # 디렉토리 생성
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # URL에서 이미지 다운로드
+    # URL 이미지 다운로드
     try:
         response = requests.get(data.url, stream=True)
         response.raise_for_status()
@@ -38,7 +38,7 @@ async def predict(data: ImageURL):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"이미지 다운로드 실패: {e}")
 
-    # YOLOv3 모델로 예측 실행
+    # YOLOv3 모델 예측 실행
     detect_command = [
         "python", os.path.join(yolo_dir, "detect.py"),
         "--source", input_image_path,
@@ -91,6 +91,6 @@ async def predict(data: ImageURL):
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"결과를 전송하는 데 실패했습니다: {e}")
 
-        return {"message": f"성공적으로 전송되었습니다: {best_class_name}"}
+        return response.json()
     else:
         return {"message": "제외되지 않은 클래스가 없습니다."}
