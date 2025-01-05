@@ -88,9 +88,8 @@ async def predict(data: ImageURL):
                 # data=best_class_name,
             )
             response.raise_for_status()
+            return {"result": best_class_name}
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"결과를 전송하는 데 실패했습니다: {e}")
-
-        return response.json()
     else:
         return {"message": "제외되지 않은 클래스가 없습니다."}
