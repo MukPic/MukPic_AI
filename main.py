@@ -7,10 +7,14 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # 클래스, 제외할 클래스
-class_names = ['접시', '쌀밥', '기타잡곡밥', '콩밥', '보리밥', '돌솥밥', '현미밥', '흑미밥', '감자밥']
+class_names = ['접시', '김치말이국수', '닭칼국수', '들깨칼국수', '떡라면', '라면', '막국수', '메밀국수', 
+               '물냉면', '닭죽', '소고기버섯죽', '어죽', '잣죽', '전복죽', '참치죽', '채소죽', '팥죽', '바지락조개국', 
+               '소고기무국', '소고기미역국', '순대국', '어묵국', '오징어국', '토란국', '탕국', '홍합미역국', '황태해장국', 
+               '근대된장국', '미소된장국', '배추된장국', '뼈다귀해장국', '선지해장국', '콩나물국', '시금치된장국', '시래기된장국', 
+               '쑥된장국', '아욱된장국', '우거지된장국', '우거지해장국', '우렁된장국', '갈비탕']
 exclude_classes = ['접시']
 
-yolo_dir = "/app/yolov3"
+yolo_dir = "/app/yolov5"
 weights_path = os.path.join(yolo_dir, "weights", "best.pt")
 output_dir = "/app/run_image"
 labels_dir = os.path.join(output_dir, "labels")
@@ -81,15 +85,6 @@ async def predict(data: ImageURL):
 
     # 결과 전송
     if best_class_name:
-        try:
-            response = requests.post(
-                "https://postman-echo.com/post",  # 요청 서버 주소로 교체
-                json={"result": best_class_name},
-                # data=best_class_name,
-            )
-            response.raise_for_status()
-            return {"result": best_class_name}
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"결과를 전송하는 데 실패했습니다: {e}")
+        return {"result": best_class_name}
     else:
         return {"message": "제외되지 않은 클래스가 없습니다."}
