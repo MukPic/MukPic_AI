@@ -23,6 +23,25 @@ labels_dir = os.path.join(output_dir, "labels")
 class ImageURL(BaseModel):
     url: str
 
+
+# 루트 경로 추가
+@app.get("/")
+def root():
+    return {
+        "message": "Welcome to MukPicAI API!",
+        "endpoints": {
+            "/health": "Check the health of the API",
+            "/predict/": "Send a POST request with an image URL to get a prediction"
+        }
+    }
+
+
+# 헬스 체크 엔드포인트 추가
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+
 @app.post("/predict/")
 async def predict(data: ImageURL):
     image_name = data.url.split('/')[-1].split('.')[0]
